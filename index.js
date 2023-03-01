@@ -16,7 +16,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        await client.connect();
+        // await client.connect();
         const database = client.db("darklessMotors")
         const productsCollection = database.collection("products");
         const ordersCollection = database.collection("orders");
@@ -68,14 +68,16 @@ async function run() {
         })
 
         // Order status update
-        app.put('/orders/:id', async(req, res)=>{
+        app.put('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const updateStatus = req.body;
-            const filter = {_id: ObjectId(id)};
-            const options = {upsert: true};
-            const updateDoc = {$set:{
-                status: updateStatus.status
-            }};
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updateStatus.status
+                }
+            };
             const result = await ordersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         })
